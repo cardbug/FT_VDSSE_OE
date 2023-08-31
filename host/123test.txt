@@ -1,0 +1,27 @@
+#--------------------------------------------------------------------
+set(Protobuf_LIBRARIES /usr/local/lib/libprotobuf.a)
+set(Protobuf_INCLUDE_DIR /usr/local/include/google/protobuf)
+set(CRYPTO_SRC ${OE_CRYPTO_LIB}_src)
+
+
+# .proto文件的处理
+set(PROTOC protoc)
+set(GRPC_CPP_PLUGIN grpc_cpp_plugin)
+set(GRPC_CPP_PLUGIN_PATH `which ${GRPC_CPP_PLUGIN}`)
+
+
+
+add_custom_command(
+    OUTPUT FT_VDSSE.pb.cc
+    COMMAND ${PROTOC} -I . --cpp_out=. FT_VDSSE.proto
+    DEPENDS FT_VDSSE.proto
+)
+
+add_custom_command(
+    OUTPUT FT_VDSSE.grpc.pb.cc
+    COMMAND ${PROTOC} -I . --grpc_out=. --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN_PATH} FT_VDSSE.proto
+    DEPENDS FT_VDSSE.proto
+)
+
+
+#--------------------------------------------------------------------
