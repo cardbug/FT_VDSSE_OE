@@ -1,0 +1,71 @@
+// Copyright (c) Open Enclave SDK contributors.
+// Licensed under the MIT License.
+
+enclave {
+    from "openenclave/edl/syscall.edl" import *;
+    from "platform.edl" import *;
+    from "openenclave/edl/time.edl" import oe_syscall_nanosleep_ocall;
+    
+    struct DataElement {
+        char l[33];
+        char e[25];
+        char proof[50];
+    };
+
+    struct SearchResult {
+        char result[1000]; // 存储逗号分隔的结果
+        char proofs[1000]; // 存储逗号分隔的证明
+    };
+
+
+    struct SearchParameters {
+        char sw[16];
+        char st[16];
+        int c1;
+        bool first;
+        char l[32];
+    };
+
+    
+    trusted {
+        public oe_result_t enclave_process_commands(
+	    	[in, string] const char* input, 
+	    	size_t totalLength
+    	);
+
+	
+    };
+
+    untrusted {
+        void host_print_char(
+            [in, string] const char* str
+            );
+
+        void host_print_int(
+            int num
+            );
+
+        // void send_requests_to_server(
+        //     [user_check] DataElement* data, 
+        //     size_t in_size
+        //     );
+
+        void send_requests_to_server(
+            [in, string] const char* str
+            );
+
+        // SearchResult search_server(
+        //     [user_check] SearchParameters* params
+        //     );
+        
+        SearchResult search_server(
+            [in, string] const char* str
+            );
+        void send_renew_to_server(
+            [in, string] const char* str
+            );
+
+    };
+};
+
+
